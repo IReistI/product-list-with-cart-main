@@ -1,0 +1,11 @@
+:root {
+    --PrimaryColor-Red: hsl(14, 86%, 42%);
+    --PrimaryColor-Green: hsl(159, 69%, 38%);
+
+    --SecondaryColor-Rose-50: hsl(20, 50%, 98%);
+    --SecondaryColor-Rose-100: hsl(13, 31%, 94%);
+    --SecondaryColor-Rose-300: hsl(14, 25%, 72%);
+    --SecondaryColor-Rose-400: hsl(7, 20%, 60%);
+    --SecondaryColor-Rose-500: hsl(12, 20%, 44%);
+    --SecondaryColor-Rose-900: hsl(14, 65%, 9%);
+}
