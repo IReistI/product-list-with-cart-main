@@ -118,7 +118,7 @@ a {
     font-weight: 400;
     padding-block: 1.3rem;
     background-color: var(--PrimaryColor-Red);
-    button {
+    & button {
         display: flex;
         justify-content: center;
         align-items: center;
@@ -129,7 +129,7 @@ a {
         background-color: transparent;
         transition: all 100ms ease-in;
     }
-    button:hover {
+    & button:hover {
         cursor: pointer;
         border: 2px solid var(--SecondaryColor-Rose-50);
         
@@ -140,7 +140,7 @@ a {
     cursor: pointer;
     border-color: var(--PrimaryColor-Red);
     transition: border-color 200ms ease-in;
-    span {
+    & span {
         color: var(--PrimaryColor-Red);
         transition: color 200ms ease;
     }
@@ -264,12 +264,12 @@ a {
     justify-content: space-between;
     align-items: center;
 
-    h3 {
+    & h3 {
         font-size: 1.3rem;
         color: var(--SecondaryColor-Rose-900);
     }
 
-    span {
+    & span {
         font-size: 2rem;
         font-weight: 700;
         color: var(--SecondaryColor-Rose-900);
@@ -284,7 +284,7 @@ a {
     background-color: var(--SecondaryColor-Rose-100);
     padding: 1.5rem;
     border-radius: 10px;
-    span {
+    & span {
         font-weight: 600;
     }
 }
@@ -403,12 +403,12 @@ a {
     padding-block: 2rem;
     border-bottom: 1px solid var(--SecondaryColor-Rose-100);
 
-    img {
+    & img {
         max-width: 5rem;
         align-self: stretch;
         border-radius: .5rem;
     }
-    span {
+    & span {
         font-size: 1.5rem;
         color: var(--SecondaryColor-Rose-900);
         font-weight: 500;
@@ -422,27 +422,27 @@ a {
 
 .modal-dessert-info {
     margin-right: 4rem;
-    h3 {
+    & h3 {
         font-size: 1.5rem;
         font-weight: 500;
         color: var(--SecondaryColor-Rose-900);
     }
-    div {
+    & div {
         display: flex;
         gap: 1rem;
         font-size: 1.5rem;
         font-weight: 500;
         margin-top: 1rem;
 
-        span {
+        & span {
             color: var(--PrimaryColor-Red);
             font-size: 1.3rem;
         }
 
-        p {
+        & p {
             color: var(--SecondaryColor-Rose-400);
         }
-        p::before {
+        & p::before {
             content: "@";
             margin-right: .3rem;
         }
@@ -454,11 +454,11 @@ a {
     justify-content: space-between;
     align-items: center;
     padding-block: 2rem;
-    p {
+    & p {
         font-size: 1.4rem;
         color: var(--SecondaryColor-Rose-500);
     }
-    span {
+    & span {
         font-size: 2.5rem;
         font-weight: 700;
         color: var(--SecondaryColor-Rose-900);

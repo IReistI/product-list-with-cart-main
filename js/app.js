@@ -28,7 +28,7 @@ function createDessert(image, name, category, price, id) {
 
     const imgDessert = document.createElement("IMG");
     imgDessert.classList.add(`${cart.some(dessert => dessert.id === id) ? 'img-dessert-red' : 'img-dessert'}`);
-    imgDessert.src = image.mobile;
+    imgDessert.src = `${verifySize(image)}`;
     imgDessert.alt = `image ${name}`;
     div.appendChild(imgDessert);
 
@@ -345,6 +345,17 @@ function resetStyles() {
             img.classList.add('img-dessert');
             img.classList.remove('img-dessert-red');
         }
+    }
+};
+
+function verifySize(images) {
+    const width = window.innerWidth;
+    if (width >= 1440) {
+        return images.desktop;
+    } else if (width >= 768) {
+        return images.tablet;
+    } else {
+        return images.mobile;
     }
 };
 
