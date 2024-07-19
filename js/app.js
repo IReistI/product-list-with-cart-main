@@ -83,11 +83,11 @@ function showCart() {
     while(containerCarts.firstChild) {
         containerCarts.removeChild(containerCarts.firstChild);
     }
+    const h2 = document.createElement("H2");
+    h2.classList.add('carts-title');
+    h2.textContent = `Your Cart (${cart.length})`;
+    containerCarts.appendChild(h2);
     if (cart.length === 0) {
-        const h2 = document.createElement("H2");
-        h2.classList.add('carts-title');
-        h2.textContent = `Your Cart (${cart.length})`;
-
         const img = document.createElement("IMG");
         img.classList.add('cart-img');
         img.src = 'assets/images/illustration-empty-cart.svg';
