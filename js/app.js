@@ -230,15 +230,33 @@ function incrementOrDecrement(id, action) {
                 element.cant++;
                 element.total += element.price;
                 return element;
-            } else if (element.id === id && action === 'decrement' && element.cant > 1) {
+            } else if (element.id === id && action === 'decrement') {
                 element.cant--;
+                if (element.cant < 1) {
+                    const dessertDiv = document.querySelector(`[data-id="${element.id}"]`);
+                    const button = dessertDiv.firstChild.lastChild;
+                    button.remove();
+        
+                    const id = dessertDiv.dataset.id;
+                    const img = dessertDiv.firstChild.firstChild;
+                    const name = dessertDiv.lastChild.firstChild.textContent;
+                    const price = dessertDiv.lastChild.lastChild.textContent;
+                    
+                    const btn = showButton(name , Number(price.replace('$', '')), Number(id), dessertDiv.children[0], img.src);
+                    dessertDiv.children[0].appendChild(btn);
+        
+                    img.classList.add('img-dessert');
+                    img.classList.remove('img-dessert-red');
+                    return element;
+                }
                 element.total -= element.price;
                 return element;
             } else {
                 return element;
             }
         });
-        cart = [...actCart];
+        const eliminate = actCart.filter(element => element.cant !== 0);
+        cart = [...eliminate];
         showCart();
         saveLocalStorage();
     }
@@ -332,7 +350,7 @@ function resetStyles() {
 
 function getQuantity(id) {
     let element = cart.find(dessert => dessert.id === id);
-    return element.cant;
+    return element ? element.cant : 0;
 };
 
 function getTotalCart(cart) {
