@@ -36,7 +36,7 @@ function createDessert(image, name, category, price, id) {
         const divBtns = showOptions(id);
         div.appendChild(divBtns);
     } else {
-        const button = showButton(name, price, id, div);
+        const button = showButton(name, price, id, div, image.mobile);
         div.appendChild(button);
     }
     
@@ -65,13 +65,14 @@ function createDessert(image, name, category, price, id) {
     return divDessert;
 };
 
-function addToCart(name, price, id) {
+function addToCart(name, price, id, img) {
     let objDessert = {
         id,
         name,
         price,
         cant: 1,
-        total: price
+        total: price,
+        img
     };
     
     cart = [...cart, objDessert];
@@ -131,7 +132,7 @@ function showCart() {
     divResults.classList.add('carts-result');
     divResults.innerHTML = ` 
       <h3>Order total</h3>
-      <span>$${getTotalCart()}</span>
+      <span>$${getTotalCart(cart)}</span>
     `;
 
     const h3 = document.createElement("H3");
@@ -141,6 +142,9 @@ function showCart() {
     const btnConfirm = document.createElement("BUTTON");
     btnConfirm.classList.add('carts-button');
     btnConfirm.textContent = 'Confirm Order';
+    btnConfirm.onclick = () => {
+        confirmOrder();  
+    };
 
     containerCarts.appendChild(divCart);
     containerCarts.appendChild(divResults);
@@ -184,14 +188,14 @@ function showOptions(id) {
     return divBtns;
 };
 
-function showButton(name = '', price = 0, id = 0, location) {
+function showButton(name = '', price = 0, id = 0, location, img) {
     const button = document.createElement("BUTTON");
     button.classList.add('button-dessert');
     button.innerHTML = `<img src="assets/images/icon-add-to-cart.svg" alt="icon-add-to-cart"><span>Add to Cart</span>`;
     button.onclick = () => {
         if (cart.some(dessert => dessert.id === id)) return;
         button.remove();
-        addToCart(name, price, id);
+        addToCart(name, price, id, img);
         saveLocalStorage();
         const divBtns = showOptions(id);
         location.appendChild(divBtns);
@@ -207,7 +211,7 @@ function removeDessertCart(id) {
     let name = element.children[1].children[0].textContent;
     let price = element.children[1].children[2].textContent;
 
-    const button = showButton(name, Number(price.replace('$', '')), Number(id), element.children[0]);
+    const button = showButton(name, Number(price.replace('$', '')), Number(id), element.children[0], img.src);
     element.children[0].children[1].remove();
     element.children[0].appendChild(button);
 
@@ -222,7 +226,7 @@ function removeDessertCart(id) {
 function incrementOrDecrement(id, action) {
     if (cart.some(dessert => dessert.id === id)) {
         const actCart = cart.map(element => {
-            if(element.id === id && action === 'increment') {
+            if (element.id === id && action === 'increment') {
                 element.cant++;
                 element.total += element.price;
                 return element;
@@ -240,12 +244,98 @@ function incrementOrDecrement(id, action) {
     }
 };
 
+function confirmOrder() {
+    const cartConfirm = [...cart];
+    const clearCart = [];
+    cart = [...clearCart];
+    resetStyles();
+    showCart();
+    saveLocalStorage();
+    showResume(cartConfirm);
+};
+
+function showResume(cartConfirm) {
+    const modal = document.querySelector(".modal");
+    modal.classList.add('modal-show');
+
+    const modalContainer = document.querySelector(".modal-container");
+    modalContainer.insertAdjacentHTML("beforeend", `
+        <img class="modal-img" src="assets/images/icon-order-confirmed.svg" alt="order confirmed">
+        <h2 class="modal-title">Order Confirmed</h2>
+        <p class="modal-subtitle">We hope you enjoy your food!</p>
+    `);
+    
+
+    const modalDesserts = document.createElement("DIV");
+    modalDesserts.classList.add('modal-desserts');
+
+    const modalTotal = document.createElement("DIV");
+    modalTotal.classList.add('modal-total');
+    modalTotal.insertAdjacentHTML("beforeend", `
+        <p>Order Total</p>
+        <span>$${getTotalCart(cartConfirm)}</span>
+    `);
+
+    cartConfirm.forEach(dessert => {
+        const {name, price, img, total, cant} = dessert;
+        const dessertDiv = document.createElement("DIV");
+        dessertDiv.classList.add('modal-dessert');
+        dessertDiv.insertAdjacentHTML("beforeend", `
+            <div class="modal-img-info">
+              <img src="${img}" alt="dessert ${name}">
+              <div class="modal-dessert-info">
+                <h3>${name}</h3>
+                <div>
+                  <span>${cant}x</span>
+                  <p>$${price}</p>
+                </div>
+              </div>
+            </div>
+            <span>$${total}</span>    
+        `);
+        modalDesserts.appendChild(dessertDiv);
+    });
+    const modalButton = document.createElement('BUTTON');
+    modalButton.classList.add('modal-button');
+    modalButton.textContent = 'Start New Order';
+    modalButton.onclick = () => {
+        const modal = document.querySelector(".modal");
+        modal.classList.remove("modal-show");
+        modalContainer.innerHTML = "";
+    };
+
+    modalDesserts.appendChild(modalTotal);
+    modalContainer.appendChild(modalDesserts);
+    modalContainer.appendChild(modalButton);
+};
+
+function resetStyles() {
+    const dessertsDiv = document.querySelectorAll('.dessert');
+    for(dessert of dessertsDiv) {
+        if(dessert.firstChild.lastChild.classList.contains('menuButton-dessert')) {
+            const button = dessert.firstChild.lastChild;
+            button.remove();
+
+            const id = dessert.dataset.id;
+            const img = dessert.firstChild.firstChild;
+            const name = dessert.lastChild.firstChild.textContent;
+            const price = dessert.lastChild.lastChild.textContent;
+            
+            const btn = showButton(name , Number(price.replace('$', '')), Number(id), dessert.children[0], img.src);
+            dessert.children[0].appendChild(btn);
+
+            img.classList.add('img-dessert');
+            img.classList.remove('img-dessert-red');
+        }
+    }
+};
+
 function getQuantity(id) {
     let element = cart.find(dessert => dessert.id === id);
     return element.cant;
 };
 
-function getTotalCart() {
+function getTotalCart(cart) {
     let total = cart.reduce((ttl, dessert) => ttl + dessert.total, 0);
     return total;
 };
@@ -261,6 +351,7 @@ function getCartLocalStorage() {
 async function getDesserts() {
     try {
         const response = await fetch('data.json');
+        if(!response) throw new error("Error");
         const result = await response.json();
         showDesserts(result);
     } catch (error) {
